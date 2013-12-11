@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 	if (argc < 2)
 		usage(argv[0]);
 
-	std::ifstream file("myfile", std::ios::binary);
+	std::ifstream file(argv[1], std::ios::binary);
 	file.seekg(0, std::ios::end);
 	std::streamsize size = file.tellg();
 	file.seekg(0, std::ios::beg);
