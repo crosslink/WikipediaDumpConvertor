@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 
 //	std::vector<unsigned char> buffer(size)
 	long buffer_size = 100 * 1024 * 1024; // 100M buffer size
-	char *buffer = new char[buffer_size];
+	char *buffer = new char[buffer_size + 1];
 	long read_size = 0;
 	long size_to_read = 0;
 	char *start, *end;
@@ -41,6 +41,7 @@ int main(int argc, char **argv) {
 
 	do {
 		if (file.read(buffer, size_to_read)) {
+			buffer[size_to_read] = '\0';
 			start = buffer;
 
 			end = strstr(start, "<links>");
@@ -49,13 +50,18 @@ int main(int argc, char **argv) {
 					cout << *start++;
 
 				end = strstr(end, "</links>");
-				if (end == NULL)
+				if (end == NULL) {
+					start = NULL;
 					break;
+				}
 				else {
 					start = end + 8;
 					end = strstr(start, "<links>");
 				}
 			}
+			if (start)
+				while ((start - buffer) < size_to_read && *start != '\0')
+					cout << *start++;
 		}
 		else {
 			cerr << "failed to file, exiting." << endl;
